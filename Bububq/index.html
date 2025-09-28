@@ -36,7 +36,7 @@
     .slide img{
       width:100%;
       height:100vh;
-      object-fit:cover;
+      object-fit: contain; /* DIUBAH AGAR FOTO TIDAK KEPOTONG */
       background:#000;
       transform:scale(1.0);
       animation: zoomFade 5s forwards;
@@ -72,12 +72,12 @@
     .slideshow-actions button{flex:1;background:#e91e63}
     .slideshow-actions button:hover{background:#c2185b}
 
-    /* FINAL SURPRISE */
-    #final-surprise-page{background:linear-gradient(135deg,#fce3ec,#ffc1d6)}
+    /* FINAL SURPRISE - PENYESUAIAN LAYOUT */
+    #final-surprise-page{background:linear-gradient(135deg,#fce3ec,#ffc1d6); overflow-y: auto; padding: 40px 20px;} /* BISA DI SCROLL */
     #final-surprise-page h1{font-family:'Pacifico',cursive;color:#d15a86;font-size:2.5em;margin-bottom:10px}
     #final-surprise-page p{font-size:1.1em;color:#555;margin-top:0px}
-    .final-scan-image{max-width:90%;width:380px;height:auto;border-radius:20px;margin-top:20px;box-shadow:0 15px 40px rgba(80,0,0,.2)}
-    #back-button{margin-top:25px; width: auto; padding: 12px 30px;}
+    .final-scan-image{max-width:90%;width:320px;height:auto;border-radius:20px;margin-top:15px;box-shadow:0 15px 40px rgba(80,0,0,.2)}
+    #back-button{margin-top:20px; margin-bottom: 20px; width: auto; padding: 12px 30px;}
   </style>
 </head>
 <body>
@@ -90,11 +90,11 @@
       <p>Masukkan kata sandi spesial kita.</p>
       <div class="input-group">
         <input type="text" id="email" required>
-        <label>Darling nickname</label>
+        <label>Panggilan Sayang</label>
       </div>
       <div class="input-group">
         <input type="password" id="password" required>
-        <label>Special date</label>
+        <label>Tanggal Spesial</label>
       </div>
       <button onclick="checkLogin()">Buka Hadiah</button>
     </div>
@@ -264,11 +264,10 @@
       document.getElementById('final-surprise-page').classList.remove('hidden');
     }
     
-    // FUNGSI BARU UNTUK TOMBOL KEMBALI
     function goBackToSlideshow() {
       document.getElementById('final-surprise-page').classList.add('hidden');
       document.getElementById('hadiah-content').classList.remove('hidden');
-      restartSlideshow(); // Memanggil fungsi restart agar slideshow & musik mulai dari awal
+      restartSlideshow();
     }
 
     function hidePopup(id){document.getElementById(id).classList.add('hidden');}
