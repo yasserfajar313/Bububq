@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bububq</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* RESET & BASE */
+    body{font-family:'Montserrat',sans-serif;margin:0;background:linear-gradient(135deg,#fce3ec,#ffc1d6);overflow:hidden}
+    #login-page,#pre-slideshow-page,#hadiah-content,#final-surprise-page{display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;box-sizing:border-box;flex-direction:column;text-align:center}
+    .hidden{display:none!important}
+
+    /* LOGIN BOX */
+    .login-box{width:320px;background:#fff;padding:40px;border-radius:15px;box-shadow:0 15px 35px rgba(0,0,0,.15)}
+    .login-box h2,#pre-slideshow-page h2{font-family:'Pacifico',cursive;color:#d15a86;font-size:2.2em;margin:0 0 15px}
+    .login-box p{color:#777;margin-bottom:25px}
+    .input-group{position:relative;margin-bottom:25px}
+    .input-group input{width:100%;padding:10px 0;border:none;border-bottom:2px solid #ccc;outline:none;font-size:16px;background:transparent}
+    .input-group label{position:absolute;top:10px;left:0;color:#999;transition:.3s}
+    .input-group input:focus~label,.input-group input:valid~label{top:-15px;font-size:12px;color:#d15a86}
+    button{width:100%;padding:12px;border:none;border-radius:25px;background:#d15a86;color:#fff;font-size:17px;font-weight:700;cursor:pointer;transition:.3s}
+    button:hover{background:#b94b72;box-shadow:0 5px 15px rgba(209,90,134,.4)}
+
+    /* POPUP */
+    .popup{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:flex;justify-content:center;align-items:center;z-index:1000}
+    .popup-content{background:#fff;padding:30px;border-radius:10px;text-align:center;width:300px;position:relative;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+    .popup h2{margin-top:0;color:#d15a86}
+    .close-btn{position:absolute;top:10px;right:15px;font-size:24px;cursor:pointer;color:#aaa}
+
+    /* SLIDESHOW */
+    #hadiah-content{background:#000;width:100%;height:100vh;position:fixed;top:0;left:0;overflow:hidden;}
+    .slideshow-container{width:100%;height:100%;max-width:900px;position:relative;margin:auto;background:#000;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+    .slide{display:none;position:relative;width:100%;height:100%;overflow:hidden;}
+    
+    .slide img{
+      width:100%;
+      height:100vh;
+      object-fit:cover;
+      background:#000;
+      transform:scale(1.0);
+      animation: zoomFade 5s forwards;
+    }
+    .caption{
+      color:#f2f2f2;
+      font-size:1.3em;
+      padding:15px;
+      position:absolute;
+      bottom:0;
+      width:100%;
+      background:rgba(0,0,0,.5);
+      font-family:'Pacifico',cursive;
+      opacity: 0;
+      animation: captionFadeIn 1s forwards 1s;
+    }
+
+    @keyframes zoomFade {
+      0% { opacity: 0.8; transform: scale(1.0); }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0.8; transform: scale(1.05); }
+    }
+    @keyframes captionFadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .final-message{padding:30px;color:#fff;background:#111;height:100vh;display:flex;flex-direction:column;justify-content:center;box-sizing:border-box; overflow-y: auto;}
+    .final-message h1{font-family:'Pacifico',cursive;color:#f8c8dc;font-size:2em;margin-bottom:15px}
+    .final-message p{font-size:0.9em; line-height:1.6; margin: 8px 0;}
+    .slideshow-actions{display:flex;gap:20px;margin-top:20px}
+    .slideshow-actions button{flex:1;background:#e91e63}
+    .slideshow-actions button:hover{background:#c2185b}
+
+    /* FINAL SURPRISE */
+    #final-surprise-page{background:linear-gradient(135deg,#fce3ec,#ffc1d6)}
+    #final-surprise-page h1{font-family:'Pacifico',cursive;color:#d15a86;font-size:2.5em;margin-bottom:10px}
+    #final-surprise-page p{font-size:1.1em;color:#555;margin-top:0px}
+    .final-scan-image{max-width:90%;width:380px;height:auto;border-radius:20px;margin-top:20px;box-shadow:0 15px 40px rgba(80,0,0,.2)}
+    #back-button{margin-top:25px; width: auto; padding: 12px 30px;}
+  </style>
+</head>
+<body>
+
+  <audio id="background-music" loop src="images/bubub30.mp3"></audio>
+
+  <div id="login-page">
+    <div class="login-box">
+      <h2>Kunci Rahasia Kita</h2>
+      <p>Masukkan kata sandi spesial kita.</p>
+      <div class="input-group">
+        <input type="text" id="email" required>
+        <label>Darling nickname</label>
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" required>
+        <label>Special date</label>
+      </div>
+      <button onclick="checkLogin()">Buka Hadiah</button>
+    </div>
+  </div>
+
+  <div id="pre-slideshow-page" class="hidden">
+    <div class="login-box">
+      <h2>Siap buka kejutan?</h2>
+      <p>Duduk manis ya...</p>
+      <button onclick="startSlideshow()">Ya, Aku Siap!</button>
+    </div>
+  </div>
+
+  <div id="hadiah-content" class="hidden">
+    <div class="slideshow-container">
+      <div class="slide"><img src="images/bubub1.jpg"><div class="caption">Dari sinilah cerita manismu dimulai...</div></div>
+      <div class="slide"><img src="images/bubub2.jpg"><div class="caption">Masa kecil yang imut dan menggemaskan!</div></div>
+      <div class="slide"><img src="images/bubub3.jpg"><div class="caption">Selalu ceria bersama kakak tersayang.</div></div>
+      <div class="slide"><img src="images/bubub4.jpg"><div class="caption">Dalam dekapan hangat keluarga.</div></div>
+      <div class="slide"><img src="images/bubub5.jpg"><div class="caption">Ekspresi lucu yang tak terlupakan.</div></div>
+      <div class="slide"><img src="images/bubub6.jpg"><div class="caption">Kenangan indah di tepi pantai.</div></div>
+      <div class="slide"><img src="images/bubub7.jpg"><div class="caption">Dan inilah kamu sekarang...</div></div>
+      <div class="slide"><img src="images/bubub8.jpg"><div class="caption">Semakin hari semakin mempesona.</div></div>
+      <div class="slide"><img src="images/bubub9.jpg"><div class="caption">Senyummu yang selalu jadi favoritku.</div></div>
+      <div class="slide"><img src="images/bubub10.jpg"><div class="caption">Teruslah menebar kebahagiaan ya!</div></div>
+      <div class="slide"><img src="images/bubub11.jpg"><div class="caption">Selalu ada tawa di wajahmu.</div></div>
+      <div class="slide"><img src="images/bubub12.jpg"><div class="caption">Tatapan yang selalu menenangkan hati.</div></div>
+      <div class="slide"><img src="images/bubub13.jpg"><div class="caption">Setiap sudut senyummu itu indah.</div></div>
+      <div class="slide"><img src="images/bubub14.jpeg"><div class="caption">Melihatmu mengejar mimpimu membuatku bangga.</div></div>
+      <div class="slide"><img src="images/bubub15.jpg"><div class="caption">Keceriaan yang menular.</div></div>
+      <div class="slide"><img src="images/bubub16.jpg"><div class="caption">Dan juga ketenangan yang kau bawa.</div></div>
+      <div class="slide"><img src="images/bubub17.jpg"><div class="caption">Anggun dalam balutan budaya.</div></div>
+      <div class="slide"><img src="images/bubub18.jpg"><div class="caption">Sisi jahilmu yang selalu kurindukan.</div></div>
+      <div class="slide"><img src="images/bubub19.jpg"><div class="caption">Cahaya di wajahmu tak pernah pudar.</div></div>
+      <div class="slide"><img src="images/bubub20.jpg"><div class="caption">Peace, love, and you! ❤️</div></div>
+      <div class="slide"><img src="images/bubub21.jpg"><div class="caption">Menyapa dunia dengan senyum khasmu.</div></div>
+      <div class="slide"><img src="images/bubub22.jpg"><div class="caption">Selalu serius tapi tetap manis.</div></div>
+      <div class="slide"><img src="images/bubub23.jpg"><div class="caption">Cantik di setiap waktu, siang dan malam.</div></div>
+      <div class="slide"><img src="images/bubub24.jpg"><div class="caption">Wajah bahagia yang selalu kurindu.</div></div>
+      <div class="slide"><img src="images/bubub25.jpg"><div class="caption">Pose galak tapi tetap menggemaskan!</div></div>
+      <div class="slide"><img src="images/bubub26.jpg"><div class="caption">Selamat atas pencapaian besarmu!</div></div>
+      <div class="slide"><img src="images/bubub27.jpg"><div class="caption">Dikelilingi cinta dan banyak rezeki.</div></div>
+      <div class="slide"><img src="images/bubub28.jpg"><div class="caption">Semua ikut merayakan hari spesialmu.</div></div>
+      <div class="slide"><img src="images/bubub29.jpg"><div class="caption">Hasil kerja keras yang terbayar lunas. Aku bangga!</div></div>
+
+      <div class="slide">
+        <div class="final-message">
+          <h1>Selamat ulang tahun, Bububq sayangku 🤍🌹✨</h1>
+          <p>Di setiap helai waktu yang berjalan, aku selalu bersyukur karena Tuhan mempertemukanku denganmu. Hari ini bukan hanya tentang bertambahnya usiamu, tetapi juga tentang bertambahnya rasa syukurku karena kamu masih di sini, tetap jadi alasan senyumku dan sumber semangatku setiap hari.</p>
+          <p>Hari ini adalah hari yang selalu ingin aku rayakan dengan penuh cinta, karena di hari ini seseorang yang paling berarti dalam hidupku hadir ke dunia. Terima kasih sudah lahir, terima kasih sudah tumbuh menjadi perempuan yang begitu indah, dan terima kasih sudah memilih untuk hadir di hidupku.</p>
+          <p>Setiap detik bersamamu adalah anugerah yang tak pernah aku sia-siakan. Kamu bukan hanya pacarku; kamu adalah tempat aku pulang, rumah yang selalu membuatku merasa tenang.</p>
+          <p>Aku berdoa semoga langkahmu selalu dimudahkan, hatimu dijaga agar selalu tenang, dan semua yang kamu perjuangkan berbuah manis. Semoga Allah memberi umur panjang yang penuh berkah, kesehatan yang tidak pernah habis, rezeki yang lancar, serta hati yang lapang menghadapi segala hal.</p>
+          <p>Kalau boleh aku meminta pada Tuhan, aku ingin diberi kesempatan untuk terus ada di setiap ulang tahunmu, untuk terus melihat senyum manismu, untuk terus menjadi orang yang bisa membuatmu merasa dicintai dan berharga.</p>
+          <p>Kamu adalah orang yang begitu berharga buatku. Terima kasih karena sudah hadir dalam hidupku, sudah jadi cahaya di saat gelap, jadi tenang di saat kacau, dan jadi alasan terindah yang membuat aku ingin menjadi pribadi yang lebih baik setiap harinya.</p>
+          <p>Selamat ulang tahun, cintaku. Semoga hari ini menjadi awal dari segala kebaikan yang akan datang dalam hidupmu—lembaran baru yang penuh kebahagiaan, cinta, dan mimpi-mimpi yang tercapai.</p>
+          <p><b>Aku mencintaimu lebih dari yang bisa diungkapkan oleh kata-kata ❤️✨</b></p>
+          <div class="slideshow-actions">
+            <button onclick="restartSlideshow()">Putar Ulang</button>
+            <button onclick="continueToFinalSurprise()">Lanjutkan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="final-surprise-page" class="hidden">
+    <h1>Satu Lagi... Scan Ini Sayang ❤️</h1>
+    <p>(Ada kejutan di dalamnya!)</p>
+    <img src="images/Bububq.png" alt="Hadiah Spesial" class="final-scan-image">
+    <button id="back-button" onclick="goBackToSlideshow()">Putar Ulang Kenangan</button>
+  </div>
+
+  <div id="popup-benar" class="popup hidden">
+    <div class="popup-content">
+      <h2>Yey, Benar! 🎉</h2><p>Pintunya terbuka...</p>
+    </div>
+  </div>
+  <div id="popup-salah" class="popup hidden">
+    <div class="popup-content">
+      <span class="close-btn" onclick="hidePopup('popup-salah')">&times;</span>
+      <h2>Ups, Salah! 😝</h2><p>Coba inget-inget lagi...</p>
+    </div>
+  </div>
+
+  <script>
+    let slideIndex = 0;
+    let slideshowTimer;
+    const slideDuration = 5000;
+    const audio = document.getElementById('background-music');
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.log("Autoplay dicegah. Menunggu interaksi pengguna.");
+          const unlockAudio = () => {
+            audio.play();
+            document.body.removeEventListener('click', unlockAudio);
+            document.body.removeEventListener('keydown', unlockAudio);
+            document.body.removeEventListener('touchstart', unlockAudio);
+          };
+          document.body.addEventListener('click', unlockAudio);
+          document.body.addEventListener('keydown', unlockAudio);
+          document.body.addEventListener('touchstart', unlockAudio);
+        });
+      }
+    });
+
+    function checkLogin(){
+      const email = document.getElementById('email').value.toLowerCase();
+      const pass = document.getElementById('password').value;
+      if(email==='bubub' && pass==='14052019'){
+        document.getElementById('popup-benar').classList.remove('hidden');
+        setTimeout(()=>{
+          document.getElementById('login-page').classList.add('hidden');
+          document.getElementById('popup-benar').classList.add('hidden');
+          document.getElementById('pre-slideshow-page').classList.remove('hidden');
+        },2000);
+      }else{
+        document.getElementById('popup-salah').classList.remove('hidden');
+      }
+    }
+
+    function startSlideshow(){
+      document.getElementById('pre-slideshow-page').classList.add('hidden');
+      document.getElementById('hadiah-content').classList.remove('hidden');
+      audio.play();
+      slideIndex=0;
+      showSlides();
+    }
+
+    function showSlides(){
+      const slides=document.getElementsByClassName('slide');
+      if(slideshowTimer) clearTimeout(slideshowTimer);
+      
+      for(let i=0;i<slides.length;i++){
+        slides[i].style.display='none';
+        const img = slides[i].querySelector('img');
+        const caption = slides[i].querySelector('.caption');
+        if(img) img.style.animation = 'none';
+        if(caption) caption.style.animation = 'none';
+      }
+      
+      slideIndex++;
+      if(slideIndex>slides.length){slideIndex=slides.length;}
+      
+      const currentSlide = slides[slideIndex-1];
+      currentSlide.style.display='block';
+      
+      const currentImg = currentSlide.querySelector('img');
+      const currentCaption = currentSlide.querySelector('.caption');
+      if(currentImg) currentImg.style.animation = 'zoomFade ' + (slideDuration / 1000) + 's forwards';
+      if(currentCaption) currentCaption.style.animation = 'captionFadeIn 1s forwards 1s';
+
+      if(slideIndex<slides.length) slideshowTimer=setTimeout(showSlides,slideDuration);
+    }
+
+    function restartSlideshow(){
+      audio.currentTime = 0;
+      audio.play();
+      slideIndex=0;
+      showSlides();
+    }
+
+    function continueToFinalSurprise(){
+      document.getElementById('hadiah-content').classList.add('hidden');
+      document.getElementById('final-surprise-page').classList.remove('hidden');
+    }
+    
+    // FUNGSI BARU UNTUK TOMBOL KEMBALI
+    function goBackToSlideshow() {
+      document.getElementById('final-surprise-page').classList.add('hidden');
+      document.getElementById('hadiah-content').classList.remove('hidden');
+      restartSlideshow(); // Memanggil fungsi restart agar slideshow & musik mulai dari awal
+    }
+
+    function hidePopup(id){document.getElementById(id).classList.add('hidden');}
+  </script>
+</body>
+</html>
