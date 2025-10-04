@@ -1,0 +1,50 @@
+   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:wght@400;500&display=swap');
+
+   @tailwind base;
+   @tailwind components;
+   @tailwind utilities;
+
+   body {
+     font-family: 'Lora', serif;
+     background-color: #FFFFF0;  /* Ivory */
+     color: #333;
+     margin: 0;
+     padding: 0;
+     line-height: 1.6;
+   }
+
+   /* Custom animasi petals (rose gold romantis, jatuh pelan) */
+   .petal {
+     position: fixed;  /* Fixed biar jatuh di seluruh page */
+     width: 15px;
+     height: 15px;
+     background: radial-gradient(circle at 30% 30%, #B76E79, #F8E1E9);  /* Gradient petal cantik */
+     border-radius: 50% 0 50% 0;
+     opacity: 0.6;
+     pointer-events: none;  /* Biar nggak ganggu klik */
+     z-index: 1;
+     animation: falling 15s linear infinite;  /* Lebih pelan buat romantis */
+   }
+
+   @keyframes falling {
+     0% {
+       transform: translateY(-100vh) rotate(0deg) scale(0);
+       opacity: 0;
+     }
+     10% {
+       opacity: 0.8;
+     }
+     90% {
+       opacity: 0.8;
+     }
+     100% {
+       transform: translateY(100vh) rotate(720deg) scale(1);
+       opacity: 0;
+     }
+   }
+
+   /* Smooth scroll untuk seluruh page */
+   html {
+     scroll-behavior: smooth;
+   }
+   
